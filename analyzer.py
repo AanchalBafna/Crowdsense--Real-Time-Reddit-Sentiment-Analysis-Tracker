@@ -6,6 +6,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import time
 import json
 import hashlib
+import streamlit as st # <-- NEW: Import Streamlit
 
 # Simple file-based cache for fetch_posts
 CACHE_DIR = os.path.join(os.path.dirname(__file__), ".cache")
@@ -55,20 +56,40 @@ except Exception:
 logging.basicConfig(level=logging.INFO)
 
 
+@st.cache_resource # <-- NEW: Use caching to prevent re-initializing PRAW client on every run
 def create_reddit_client():
     """Create and return a PRAW Reddit instance.
 
     Credential precedence:
-    1. Environment variables REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT
-    2. config.py values (if present)
+    1. Streamlit secrets (for deployed app)
+    2. Environment variables REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT
+    3. config.py values (if present)
     """
-    client_id = os.environ.get("REDDIT_CLIENT_ID") or CONFIG_CLIENT_ID
-    client_secret = os.environ.get("REDDIT_CLIENT_SECRET") or CONFIG_CLIENT_SECRET
-    user_agent = os.environ.get("REDDIT_USER_AGENT") or CONFIG_USER_AGENT or "CrowdSense v0.1"
+    # ----------------------------------------------------------------------
+    # NEW CODE BLOCK: Retrieve credentials from st.secrets first (for deployed app)
+    if "reddit" in st.secrets:
+        try:
+            client_id = st.secrets["reddit"]["CLIENT_ID"]
+            client_secret = st.secrets["reddit"]["CLIENT_SECRET"]
+            user_agent = st.secrets["reddit"]["USER_AGENT"]
+        except KeyError:
+             # Fall through to the next check if the keys are named differently
+             client_id = client_secret = user_agent = None
+    else:
+        client_id = client_secret = user_agent = None
+    # ----------------------------------------------------------------------
+
+
+    # FALLBACK/LOCAL DEV: Use existing logic (Environment variables or config.py)
+    # The existing code now acts as a fallback to the st.secrets logic above
+    client_id = client_id or os.environ.get("REDDIT_CLIENT_ID") or CONFIG_CLIENT_ID
+    client_secret = client_secret or os.environ.get("REDDIT_CLIENT_SECRET") or CONFIG_CLIENT_SECRET
+    user_agent = user_agent or os.environ.get("REDDIT_USER_AGENT") or CONFIG_USER_AGENT or "CrowdSense v0.1"
+
 
     if not client_id or not client_secret:
         logging.error("Reddit credentials not found. Set environment variables or update config.py.")
-        raise RuntimeError("Missing Reddit credentials")
+        raise RuntimeError("Missing Reddit credentials") # <--- Your original error line!
 
     reddit = praw.Reddit(
         client_id=client_id,

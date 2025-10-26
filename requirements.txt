@@ -1,0 +1,8 @@
+praw
+pandas
+vaderSentiment
+wordcloud
+matplotlib
+streamlit
+plotly
+nltk

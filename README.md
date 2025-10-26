@@ -1,4 +1,6 @@
-# CrowdSense - Reddit sentiment prototype
+# CrowdSense — Real-Time Reddit Sentiment Tracker
+
+**✨ Live App: [CrowdSense App]([https://crowdsense--real-time-reddit-sentiment-analysis-tracker-dgsv9w.streamlit.app)**
 
 This workspace contains a simple backend script to fetch Reddit posts and analyze sentiment using VADER.
 

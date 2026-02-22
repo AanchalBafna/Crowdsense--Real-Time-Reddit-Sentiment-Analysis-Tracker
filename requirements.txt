@@ -6,4 +6,6 @@ matplotlib
 streamlit
 plotly
 nltk
+streamlit==1.30.0
 altair==4.2.2
+pillow>=10.0.0

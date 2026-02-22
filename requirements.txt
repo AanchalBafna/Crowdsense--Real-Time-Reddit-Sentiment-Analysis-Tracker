@@ -6,3 +6,4 @@ matplotlib
 streamlit
 plotly
 nltk
+altair==4.2.2

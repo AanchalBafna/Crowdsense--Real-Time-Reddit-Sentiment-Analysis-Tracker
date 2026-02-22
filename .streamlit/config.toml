@@ -3,7 +3,7 @@ primaryColor = "#8B2F2F"        # maroon (used for buttons, selected chips)
 backgroundColor = "#0b1220"     # main app background (dark)
 secondaryBackgroundColor = "#F7F3EE"  # sidebar background (ivory)
 textColor = "#2B2F3A"          # readable dark text on ivory sidebar
-font = "Inter"
+font = "sans serif"
 
 [server]
 headless = true

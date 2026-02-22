@@ -6,5 +6,6 @@ textColor = "#2B2F3A"          # readable dark text on ivory sidebar
 font = "sans serif"
 
 [server]
+fileWatcherType = "none
 headless = true
 port = 8501
